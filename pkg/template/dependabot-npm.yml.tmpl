@@ -2,8 +2,10 @@
   - package-ecosystem: "npm"
     directory: "{{ .Directory -}}"
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: "{{ .Interval -}}"
+      {{- if and .Day (eq .Interval "weekly") }}
+      day: "{{ .Day -}}"
+      {{- end }}
     commit-message:
       include: "scope"
     {{- if .Registries }}

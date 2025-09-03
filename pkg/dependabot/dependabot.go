@@ -105,6 +105,8 @@ func searchGradle(path string) ([]string, string, error) {
 type DependaBot struct {
 	kinds    []string
 	rootPath string
+	interval string
+	day      string
 }
 
 type Option func(*DependaBot)
@@ -124,6 +126,18 @@ func WithKind(kind string) Option {
 			kinds = strings.Split(kind, ",")
 		}
 		g.kinds = kinds
+	}
+}
+
+func WithInterval(interval string) Option {
+	return func(g *DependaBot) {
+		g.interval = interval
+	}
+}
+
+func WithDay(day string) Option {
+	return func(g *DependaBot) {
+		g.day = day
 	}
 }
 
@@ -160,7 +174,7 @@ func (d *DependaBot) Search(path, kind string) (template.DependaBotResult, error
 	case "terraform":
 		folders, tmplfile, err = searchTerraform(path)
 	}
-	return template.DependaBotResult{Folders: folders, Template: tmplfile, Registry: registry(kind)}, err
+	return template.DependaBotResult{Folders: folders, Template: tmplfile, Registry: registry(kind), Interval: d.interval, Day: d.day}, err
 }
 
 func registry(kind string) string {
@@ -186,7 +200,7 @@ func registry(kind string) string {
 	}
 }
 
-func (d *DependaBot) GenarateConfigFile(path string, prefix string) ([]string, string) {
+func (d *DependaBot) GenarateConfigFile(path string) ([]string, string) {
 	var buffer bytes.Buffer
 	packages := make([]string, 0)
 

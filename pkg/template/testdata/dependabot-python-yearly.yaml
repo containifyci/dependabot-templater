@@ -1,18 +1,13 @@
-{{- range . }}
+
   - package-ecosystem: "pip"
-    directory: "{{ .Directory -}}"
+    directory: "projecte"
     schedule:
-      interval: "{{ .Interval -}}"
-      {{- if and .Day (eq .Interval "weekly") }}
-      day: "{{ .Day -}}"
-      {{- end }}
+      interval: "yearly"
     commit-message:
       include: "scope"
-    {{- if .Registries }}
     insecure-external-code-execution: allow # this is needed to access the private registry https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#insecure-external-code-execution--
     registries:
-      - {{ .Registries }}
-    {{- end }}
+      - python-registry
     groups:
       minor:
         patterns:
@@ -20,4 +15,3 @@
         update-types:
           - "minor"
           - "patch"
-{{- end -}}
