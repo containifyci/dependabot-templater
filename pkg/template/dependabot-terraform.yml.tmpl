@@ -1,0 +1,16 @@
+{{- range . }}
+  # Terraform - One entry per thing we want to scan as per https://github.com/dependabot/dependabot-core/issues/649
+  - package-ecosystem: "terraform"
+    directory: "{{ .Directory -}}"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    rebase-strategy: "disabled"
+    open-pull-requests-limit: 1
+    commit-message:
+      include: "scope"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
+{{- end -}}

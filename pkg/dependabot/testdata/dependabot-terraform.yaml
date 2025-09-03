@@ -1,0 +1,18 @@
+---
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+version: 2
+updates:
+  # Terraform - One entry per thing we want to scan as per https://github.com/dependabot/dependabot-core/issues/649
+  - package-ecosystem: "terraform"
+    directory: "test_path/projectb"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    rebase-strategy: "disabled"
+    open-pull-requests-limit: 1
+    commit-message:
+      include: "scope"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]

@@ -1,0 +1,26 @@
+---
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+version: 2
+registries:
+  npm-registry:
+    type: npm-registry
+    url: https://europe-west3-npm.pkg.dev/xxxxxxx/npm-registry
+    username: "_json_key_base64" # <- Note the username
+    password: ${{ secrets.ARTIFACTORY_REGISTRY_SERVICE_ACCOUNT_KEY_BASE64 }} # base64 encoded service account key stored as Github secret. SA must have reader permissions in npm repository.
+updates:
+  - package-ecosystem: "npm"
+    directory: "projectd"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    commit-message:
+      include: "scope"
+    registries:
+      - npm-registry
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

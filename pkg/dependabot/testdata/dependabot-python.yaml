@@ -1,0 +1,44 @@
+---
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+version: 2
+registries:
+  python-registry:
+    type: python-index
+    url: https://europe-west3-python.pkg.dev/xxxxxxx/python-registry
+    username: "_json_key_base64" # <- Note the username
+    password: ${{ secrets.ARTIFACTORY_REGISTRY_SERVICE_ACCOUNT_KEY_BASE64 }} # base64 encoded service account key stored as Github secret. SA must have reader permissions in npm repository.
+updates:
+  - package-ecosystem: "pip"
+    directory: "projecte"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    commit-message:
+      include: "scope"
+    insecure-external-code-execution: allow # this is needed to access the private registry https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#insecure-external-code-execution--
+    registries:
+      - python-registry
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+  - package-ecosystem: "pip"
+    directory: "projectf"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    commit-message:
+      include: "scope"
+    insecure-external-code-execution: allow # this is needed to access the private registry https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#insecure-external-code-execution--
+    registries:
+      - python-registry
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

@@ -1,0 +1,20 @@
+{{- range . }}
+  - package-ecosystem: "npm"
+    directory: "{{ .Directory -}}"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    commit-message:
+      include: "scope"
+    {{- if .Registries }}
+    registries:
+      - {{ .Registries }}
+    {{- end }}
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+{{- end -}}

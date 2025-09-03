@@ -1,0 +1,16 @@
+{{- range . }}
+  - package-ecosystem: "gradle"
+    directory: "{{ .Directory -}}"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    commit-message:
+      include: "scope"
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+{{- end -}}
