@@ -15,6 +15,18 @@ updates:
         - "minor"
         - "patch"
   - package-ecosystem: "gomod"
+    directory: ".containifyci"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+  - package-ecosystem: "gomod"
     directory: "."
     schedule:
       interval: "weekly"
