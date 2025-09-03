@@ -1,0 +1,16 @@
+
+  - package-ecosystem: "npm"
+    directory: "projectd"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      include: "scope"
+    registries:
+      - npm-registry
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

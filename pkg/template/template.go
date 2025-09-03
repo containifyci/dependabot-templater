@@ -57,18 +57,39 @@ type DependaBotResult struct {
 	Folders  []string
 	Template string
 	Registry string
+	Interval string
+	Day      string
 }
 
 type DependaBotEntry struct {
 	Directory  string
 	Registries string
+	Interval   string
+	Day        string
 }
 
 func RenderDependaBot(result DependaBotResult) (string, error) {
 	var tpl strings.Builder
 	var entries = make([]DependaBotEntry, 0)
+	
+	// Set default values if not provided for backward compatibility
+	interval := result.Interval
+	if interval == "" {
+		interval = "weekly"
+	}
+	
+	day := result.Day
+	if day == "" && interval == "weekly" {
+		day = "sunday"
+	}
+	
 	for _, folder := range result.Folders {
-		entries = append(entries, DependaBotEntry{Directory: folder, Registries: result.Registry})
+		entries = append(entries, DependaBotEntry{
+			Directory:  folder, 
+			Registries: result.Registry,
+			Interval:   interval,
+			Day:        day,
+		})
 	}
 	tmpl := template.Must(template.New(result.Template).Parse(readTemplate(result.Template)))
 	err := tmpl.Execute(&tpl, entries)

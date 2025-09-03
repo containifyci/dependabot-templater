@@ -27,6 +27,22 @@ func PythonConfig() string {
 	return Content("dependabot-python.yaml")
 }
 
+func NodeJSDailyConfig() string {
+	return Content("dependabot-npm-daily.yaml")
+}
+
+func NodeJSMonthlyConfig() string {
+	return Content("dependabot-npm-monthly.yaml")
+}
+
+func TerraformQuarterlyConfig() string {
+	return Content("dependabot-terraform-quarterly.yaml")
+}
+
+func PythonYearlyConfig() string {
+	return Content("dependabot-python-yearly.yaml")
+}
+
 func HeaderNodeJSConfig() string {
 	return Content("dependabot-header-npm.yaml")
 }

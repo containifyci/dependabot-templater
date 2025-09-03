@@ -1,6 +1,7 @@
 package template
 
 import (
+	"fmt"
 	"testing"
 
 	. "github.com/containifyci/dependabot-templater/pkg/template/testdata"
@@ -102,10 +103,12 @@ func TestRenderHeader(t *testing.T) {
 
 func TestRenderDependaBot(t *testing.T) {
 	for _, test := range []struct {
+		name             string
 		result           DependaBotResult
 		expectedTemplate string
 	}{
 		{
+			name: "npm-weekly-default",
 			result: DependaBotResult{
 				Folders:  []string{"projectd"},
 				Template: "dependabot-npm.yml.tmpl",
@@ -114,21 +117,103 @@ func TestRenderDependaBot(t *testing.T) {
 			expectedTemplate: NodeJSConfig(),
 		},
 		{
+			name: "terraform-weekly-default",
 			result: DependaBotResult{
 				Folders:  []string{"test_path/projectb"},
 				Template: "dependabot-terraform.yml.tmpl",
 			},
 			expectedTemplate: TerraformConfig(),
 		},
+		{
+			name: "npm-daily",
+			result: DependaBotResult{
+				Folders:  []string{"projectd"},
+				Template: "dependabot-npm.yml.tmpl",
+				Registry: "npm-registry",
+				Interval: "daily",
+			},
+			expectedTemplate: NodeJSDailyConfig(),
+		},
+		{
+			name: "npm-monthly",
+			result: DependaBotResult{
+				Folders:  []string{"projectd"},
+				Template: "dependabot-npm.yml.tmpl",
+				Registry: "npm-registry",
+				Interval: "monthly",
+			},
+			expectedTemplate: NodeJSMonthlyConfig(),
+		},
+		{
+			name: "terraform-quarterly",
+			result: DependaBotResult{
+				Folders:  []string{"test_path/projectb"},
+				Template: "dependabot-terraform.yml.tmpl",
+				Interval: "quarterly",
+			},
+			expectedTemplate: TerraformQuarterlyConfig(),
+		},
+		{
+			name: "python-yearly",
+			result: DependaBotResult{
+				Folders:  []string{"projecte"},
+				Template: "dependabot-python.yml.tmpl",
+				Registry: "python-registry",
+				Interval: "yearly",
+			},
+			expectedTemplate: PythonYearlyConfig(),
+		},
 	} {
-		t.Run(test.result.Template, func(t *testing.T) {
+		t.Run(test.name, func(t *testing.T) {
 			tmpl, err := RenderDependaBot(test.result)
 			require.NoError(t, err)
 			assert.Equal(t, test.expectedTemplate, tmpl+"\n")
 		})
 	}
-	kinds := []string{"npm", "terraform"}
-	output, err := RenderHeader(kinds)
-	assert.Nil(t, err)
-	assert.NotNil(t, output)
+}
+
+func TestRenderDependaBotIntervals(t *testing.T) {
+	tests := []struct {
+		name     string
+		interval string
+		day      string
+		wantDay  bool
+	}{
+		{"daily", "daily", "", false},
+		{"weekly-default", "weekly", "", true}, // should get default sunday
+		{"weekly-monday", "weekly", "monday", true},
+		{"monthly", "monthly", "", false},
+		{"quarterly", "quarterly", "", false},
+		{"semiannually", "semiannually", "", false},
+		{"yearly", "yearly", "", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := DependaBotResult{
+				Folders:  []string{"test"},
+				Template: "dependabot-npm.yml.tmpl",
+				Interval: tt.interval,
+				Day:      tt.day,
+			}
+			
+			tmpl, err := RenderDependaBot(result)
+			require.NoError(t, err)
+			
+			// Verify interval is present
+			assert.Contains(t, tmpl, fmt.Sprintf(`interval: "%s"`, tt.interval))
+			
+			// Verify day handling
+			if tt.wantDay && tt.interval == "weekly" {
+				expectedDay := tt.day
+				if expectedDay == "" {
+					expectedDay = "sunday" // default
+				}
+				assert.Contains(t, tmpl, fmt.Sprintf(`day: "%s"`, expectedDay))
+			} else {
+				// For non-weekly intervals, day should not appear
+				assert.NotRegexp(t, `day:\s*"`, tmpl)
+			}
+		})
+	}
 }

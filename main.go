@@ -10,9 +10,10 @@ func main() {
 	args := os.Args[1:]
 	kind := args[0]
 	path := args[1]
-	prefix := arg(args, 2, "")
-	bot := dependabot.New(dependabot.WithKind(kind))
-	_, dependabot := bot.GenarateConfigFile(path, prefix)
+	interval := arg(args, 2, "weekly")
+	day := arg(args, 3, "")
+	bot := dependabot.New(dependabot.WithKind(kind), dependabot.WithInterval(interval), dependabot.WithDay(day))
+	_, dependabot := bot.GenarateConfigFile(path)
 	_, err := os.Stdout.WriteString(dependabot)
 	if err != nil {
 		panic(err)

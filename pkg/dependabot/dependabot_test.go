@@ -61,7 +61,7 @@ func TestRender(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			bot := New(WithKind(test.kind), WithRootPath("dependabot/test_path/"))
-			_, tmpl := bot.GenarateConfigFile(test.path, "")
+			_, tmpl := bot.GenarateConfigFile(test.path)
 
 			assert.Equal(t, test.expectedTemplate, tmpl)
 		})
