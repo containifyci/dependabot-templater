@@ -6,8 +6,6 @@
       interval: "quarterly"
     rebase-strategy: "disabled"
     open-pull-requests-limit: 1
-    commit-message:
-      include: "scope"
     ignore:
       - dependency-name: "*"
         update-types:

@@ -13,8 +13,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-    commit-message:
-      include: "scope"
     insecure-external-code-execution: allow # this is needed to access the private registry https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#insecure-external-code-execution--
     registries:
       - python-registry
@@ -30,8 +28,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-    commit-message:
-      include: "scope"
     insecure-external-code-execution: allow # this is needed to access the private registry https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#insecure-external-code-execution--
     registries:
       - python-registry

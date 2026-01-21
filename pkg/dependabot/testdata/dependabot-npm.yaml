@@ -13,8 +13,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-    commit-message:
-      include: "scope"
     registries:
       - npm-registry
     groups:

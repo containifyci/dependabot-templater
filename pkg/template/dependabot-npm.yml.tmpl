@@ -6,8 +6,6 @@
       {{- if and .Day (eq .Interval "weekly") }}
       day: "{{ .Day -}}"
       {{- end }}
-    commit-message:
-      include: "scope"
     {{- if .Registries }}
     registries:
       - {{ .Registries }}

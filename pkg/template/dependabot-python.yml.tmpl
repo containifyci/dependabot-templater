@@ -6,8 +6,6 @@
       {{- if and .Day (eq .Interval "weekly") }}
       day: "{{ .Day -}}"
       {{- end }}
-    commit-message:
-      include: "scope"
     {{- if .Registries }}
     insecure-external-code-execution: allow # this is needed to access the private registry https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#insecure-external-code-execution--
     registries:
